@@ -1,4 +1,0 @@
-export enum ACCOUNT_STATUS {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
