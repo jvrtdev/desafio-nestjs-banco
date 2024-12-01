@@ -54,19 +54,17 @@ export class Account extends Model {
   @BelongsTo(() => Customer)
   customer: Customer;
 
-  /*@HasMany(() => TransactionAccount, 'originAccountId')
-    originAccounts: TransactionAccount[];
-
-    @HasMany(() => TransactionAccount, 'destinationAccountId')
-    destinationAccounts: TransactionAccount[];*/
-
-  @BelongsToMany(() => Transaction, () => TransactionAccount, 'originAccountId')
+  @BelongsToMany(
+    () => Transaction,
+    () => TransactionAccount,
+    'origin_account_id',
+  )
   outgoingTransactions: Transaction[];
 
   @BelongsToMany(
     () => Transaction,
     () => TransactionAccount,
-    'destinationAccountId',
+    'destination_account_id',
   )
   incomingTransactions: Transaction[];
 
