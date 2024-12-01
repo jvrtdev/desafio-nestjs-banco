@@ -23,7 +23,7 @@ export const databaseProviders = [
         },
       });
       sequelize.addModels([Customer, Account, Transaction, TransactionAccount]);
-      await sequelize.sync({ force: true });
+      await sequelize.sync();
       return sequelize;
     },
   },
