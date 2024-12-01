@@ -1,3 +1,4 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { TRANSACTION_TYPE } from '../../enums/transaction';
 
 export function calculateNewBalanceByTransactionType(
@@ -7,10 +8,16 @@ export function calculateNewBalanceByTransactionType(
 ) {
   console.log('calculate: type:', type, 'amount:', amount, 'balance:', balance);
   switch (type) {
-    case TRANSACTION_TYPE.WITHDRAW:
+    case TRANSACTION_TYPE.WITHDRAWL:
+      if (balance === 0 || balance < amount)
+        throw new HttpException('Insufficient funds', HttpStatus.BAD_REQUEST);
+
       return Number(balance - amount);
 
     case TRANSACTION_TYPE.TRANSFER:
+      if (balance === 0 || balance < amount)
+        throw new HttpException('Insufficient funds', HttpStatus.BAD_REQUEST);
+
       return Number(balance - amount);
 
     case TRANSACTION_TYPE.DEPOSIT:
