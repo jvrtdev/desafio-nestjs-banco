@@ -1,6 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { CreateTransactionDto } from 'src/domain/dtos';
+import { createApiPropertyDecorator } from '@nestjs/swagger/dist/decorators/api-property.decorator';
+import {
+  CreateTransactionDto,
+  CreateTransferDto,
+  CreateWithdrawlDto,
+} from 'src/domain/dtos';
 import { CreateDepositDto } from 'src/domain/dtos/transaction/create-deposit.dto';
 import { Transaction } from 'src/domain/entities';
 import { TransactionMakeDepositUseCase } from '../use-cases/make-deposit/transaction-make-deposit.use-case';
@@ -10,7 +15,7 @@ import { ITransactionController } from './itransaction.controller';
 
 @Controller('movimentacoes')
 export class TransactionController
-  implements ITransactionController<CreateTransactionDto, Transaction>
+  implements ITransactionController<Transaction>
 {
   constructor(
     private readonly transactionMakeDepositUseCase: TransactionMakeDepositUseCase,
@@ -25,10 +30,21 @@ export class TransactionController
   makeDesposit(@Body() dto: CreateDepositDto): Promise<Transaction> {
     return this.transactionMakeDepositUseCase.execute(dto);
   }
-  makeTransfer(dto: CreateTransactionDto): Promise<Transaction> {
+  @Post('transferencia')
+  @ApiResponse({
+    status: 201,
+    description: 'The transfer has been successfully created.',
+  })
+  makeTransfer(@Body() dto: CreateTransferDto): Promise<Transaction> {
     return this.transactionTransferDepositUseCase.execute(dto);
   }
-  makeWithdrawal(dto: CreateTransactionDto): Promise<Transaction> {
+
+  @Post('saque')
+  @ApiResponse({
+    status: 201,
+    description: 'The withdrawal has been successfully created.',
+  })
+  makeWithdrawal(@Body() dto: CreateWithdrawlDto): Promise<Transaction> {
     return this.transactionMakeWithdrawlUseCase.execute(dto);
   }
 }
