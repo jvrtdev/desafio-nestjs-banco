@@ -24,7 +24,7 @@ export class Transaction extends Model<Transaction> {
   @Column({
     type: DataType.ENUM(
       TRANSACTION_TYPE.DEPOSIT,
-      TRANSACTION_TYPE.WITHDRAW,
+      TRANSACTION_TYPE.WITHDRAWL,
       TRANSACTION_TYPE.TRANSFER,
     ),
     allowNull: false,

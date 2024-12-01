@@ -22,7 +22,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
   @ForeignKey(() => Account)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'origin_account_id',
   })
   originAccountId: string;
@@ -30,7 +30,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
   @ForeignKey(() => Account)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'destination_account_id',
   })
   destinationAccountId: string;
@@ -42,10 +42,10 @@ export class TransactionAccount extends Model<TransactionAccount> {
   })
   transactionId: string;
 
-  @BelongsTo(() => Account, 'originAccountId')
+  @BelongsTo(() => Account, 'origin_account_id')
   originAccount: Account;
 
-  @BelongsTo(() => Account, 'destinationAccountId')
+  @BelongsTo(() => Account, 'destination_account_id')
   destinationAccount: Account;
 
   @BelongsTo(() => Transaction)
