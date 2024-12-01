@@ -24,6 +24,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
     type: DataType.UUID,
     allowNull: true,
     field: 'origin_account_id',
+    unique: false,
   })
   originAccountId: string;
 
@@ -32,6 +33,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
     type: DataType.UUID,
     allowNull: true,
     field: 'destination_account_id',
+    unique: false,
   })
   destinationAccountId: string;
 
@@ -39,6 +41,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
   @Column({
     type: DataType.UUID,
     allowNull: false,
+    unique: true,
   })
   transactionId: string;
 

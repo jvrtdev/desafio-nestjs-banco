@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
-import { CPFUtil } from 'src/domain/common/utils/cpf/cpf.util';
-import {
-  CustomerRepository,
-  ICustomerRepository,
-} from 'src/domain/repositories/customer';
+import { CPFService } from 'src/domain/services/customer/cpf';
+import { CustomerService } from 'src/domain/services/customer/validate-customer.service';
 import { CustomerController } from './controllers/customer.controller';
 import { CustomerProviders } from './providers/customer.providers';
 import { CustomerCreateUseCase } from './use-cases/create/customer-create.use-case';
@@ -15,9 +12,10 @@ import { CustomerFindOneUseCase } from './use-cases/find-one/customer-find-one.u
   providers: [
     CustomerCreateUseCase,
     CustomerFindOneUseCase,
-    CPFUtil,
+    CustomerService,
+    CPFService,
     ...CustomerProviders,
   ],
-  exports: [CustomerCreateUseCase, CustomerFindOneUseCase],
+  exports: [CustomerCreateUseCase, CustomerFindOneUseCase, CustomerService],
 })
 export class CustomerModule {}

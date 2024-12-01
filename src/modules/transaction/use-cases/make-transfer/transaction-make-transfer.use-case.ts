@@ -1,12 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { IBaseUseCase } from 'src/domain/common/base/use-case';
-import { ACCOUNT_STATUS } from 'src/domain/common/enums/account';
 import { TRANSACTION_TYPE } from 'src/domain/common/enums/transaction';
-import { calculateNewBalanceByTransactionType } from 'src/domain/common/utils/account/calculateNewBalanceByTransactionType';
-import { CreateTransactionDto, CreateTransferDto } from 'src/domain/dtos';
+import { CreateTransferDto } from 'src/domain/dtos';
 import { Transaction } from 'src/domain/entities';
 import { ITransactionRepository } from 'src/domain/repositories/transaction';
-import { AccountFindOneUseCase } from 'src/modules/account/use-cases/find-one/account-find-one.use-case';
+import { TransactionService } from 'src/domain/services/transaction/transaction.service';
 import { AccountUpdateAccountBalanceUseCase } from 'src/modules/account/use-cases/update-account-balance/account-update-account-balance.use-case';
 import { TransactionAccountCreateAccountsRegisterUseCase } from 'src/modules/transaction-account/use-cases/create-transaction-accounts-register/create-accounts-register.use-case';
 
@@ -16,48 +14,32 @@ export class TransactionMakeTransferUseCase
 {
   constructor(
     private readonly transactionRepository: ITransactionRepository,
-    private readonly accountFindOneUseCase: AccountFindOneUseCase,
+    private readonly transactionService: TransactionService,
     private readonly accountUpdateAccountBalanceUpdateUseCase: AccountUpdateAccountBalanceUseCase,
     private readonly transactionAccountCreateAccountsRegisterUseCase: TransactionAccountCreateAccountsRegisterUseCase,
   ) {}
   async execute(dto: CreateTransferDto): Promise<Transaction> {
-    const originAccount = await this.accountFindOneUseCase.execute(
-      dto.originAccountId,
-    );
-
-    const destinationAccount = await this.accountFindOneUseCase.execute(
-      dto.destinationAccountId,
-    );
-
-    if (!originAccount || !destinationAccount)
-      throw new HttpException(
-        'Origin account or destination account not found',
-        HttpStatus.BAD_REQUEST,
-      );
-
-    if (dto.amount <= 0)
-      throw new HttpException('Invalid value!', HttpStatus.BAD_REQUEST);
-
-    if (originAccount.status === ACCOUNT_STATUS.INACTIVE)
-      throw new HttpException(
-        'Account is inactive, cannot transfer',
-        HttpStatus.BAD_REQUEST,
+    const accounts =
+      await this.transactionService.validateAccountAndAmountTransfer(
+        dto.originAccountId,
+        dto.destinationAccountId,
+        dto.amount,
       );
 
     await Promise.all([
       this.accountUpdateAccountBalanceUpdateUseCase.execute({
-        accountId: originAccount.id,
-        balance: calculateNewBalanceByTransactionType(
-          +originAccount.balance,
+        accountId: accounts.originAccount.id,
+        balance: this.transactionService.calculateNewBalanceByTransactionType(
+          +accounts.originAccount.balance,
           dto.amount,
           TRANSACTION_TYPE.TRANSFER,
         ),
       }),
 
       this.accountUpdateAccountBalanceUpdateUseCase.execute({
-        accountId: destinationAccount.id,
-        balance: calculateNewBalanceByTransactionType(
-          +destinationAccount.balance,
+        accountId: accounts.destinationAccount.id,
+        balance: this.transactionService.calculateNewBalanceByTransactionType(
+          +accounts.destinationAccount.balance,
           dto.amount,
           TRANSACTION_TYPE.DEPOSIT,
         ),
@@ -66,9 +48,11 @@ export class TransactionMakeTransferUseCase
 
     const transaction = await this.transactionRepository.createOperation(dto);
 
+    console.log(transaction);
+
     await this.transactionAccountCreateAccountsRegisterUseCase.execute({
-      originAccountId: originAccount.id,
-      destinationAccountId: destinationAccount.id,
+      originAccountId: accounts.originAccount.id,
+      destinationAccountId: accounts.destinationAccount.id,
       transactionId: transaction.id,
       type: dto.type,
     });
