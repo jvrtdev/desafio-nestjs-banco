@@ -1,14 +1,82 @@
+// @Table({ tableName: 'logs' })
+// export class Log extends Model<Log> {
+//   @Column({
+//     type: DataType.UUID,
+//     defaultValue: DataType.UUIDV4,
+//     primaryKey: true,
+//   })
+//   id: string;
+
+//   @Column({
+//     type: DataType.ENUM(
+//       MODEL_NAME.ACCOUNT,
+//       MODEL_NAME.CUSTOMER,
+//       MODEL_NAME.TRANSACTION,
+//       MODEL_NAME.TRANSACTION_ACCOUNTS,
+//     ),
+//     field: 'model_name',
+//   })
+//   modelName: string;
+
+//   @Column({
+//     type: DataType.INTEGER,
+//     field: 'account_id',
+//   })
+//   accountId: number;
+
+//   @Column({
+//     type: DataType.UUID,
+//     field: 'transation_id',
+//   })
+//   transactionId: string;
+
+//   @Column({
+//     type: DataType.ENUM(
+//       LOG_ACTION.CREATE,
+//       LOG_ACTION.DEPOSIT,
+//       LOG_ACTION.WITHDRAW,
+//       LOG_ACTION.TRANSFER,
+//       LOG_ACTION.LOGGED,
+//       LOG_ACTION.LOGOUT,
+//     ),
+//   })
+//   action: string;
+
+//   @Column({
+//     type: DataType.STRING,
+//   })
+//   message: string;
+
+//   @CreatedAt
+//   @Column({
+//     type: DataType.DATE,
+//     field: 'created_at',
+//   })
+//   createdAt: Date;
+
+//   @UpdatedAt
+//   @Column({
+//     type: DataType.DATE,
+//     field: 'updated_at',
+//   })
+//   updatedAt: Date;
+// }
+
 import {
   Column,
   CreatedAt,
   DataType,
+  ForeignKey,
   Model,
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
 import { LOG_ACTION, MODEL_NAME } from 'src/domain/common/enums/log';
+import { TRANSACTION_TYPE } from 'src/domain/common/enums/transaction';
+import { Account } from '../account';
+import { Transaction } from '../transaction';
 
-@Table({ tableName: 'logs' })
+@Table({ tableName: 'audit_logs', timestamps: true, underscored: true })
 export class Log extends Model<Log> {
   @Column({
     type: DataType.UUID,
@@ -19,55 +87,45 @@ export class Log extends Model<Log> {
 
   @Column({
     type: DataType.ENUM(
-      MODEL_NAME.ACCOUNT,
-      MODEL_NAME.CUSTOMER,
-      MODEL_NAME.TRANSACTION,
-      MODEL_NAME.TRANSACTION_ACCOUNTS,
+      TRANSACTION_TYPE.DEPOSIT,
+      TRANSACTION_TYPE.WITHDRAWL,
+      TRANSACTION_TYPE.TRANSFER,
     ),
-    field: 'model_name',
+    allowNull: false,
   })
-  modelName: string;
+  operation: string;
 
   @Column({
-    type: DataType.INTEGER,
-    field: 'account_id',
+    type: DataType.DECIMAL,
+    allowNull: false,
   })
-  accountId: number;
+  amount: number;
 
+  @Column({
+    type: DataType.DECIMAL,
+    allowNull: false,
+    field: 'previous_balance',
+  })
+  previousBalance: number;
+
+  @Column({
+    type: DataType.DECIMAL,
+    allowNull: false,
+    field: 'new_balance',
+  })
+  newBalance: number;
+
+  @ForeignKey(() => Account)
   @Column({
     type: DataType.UUID,
-    field: 'transation_id',
+    allowNull: false,
   })
-  transactionId: string;
-
-  @Column({
-    type: DataType.ENUM(
-      LOG_ACTION.CREATE,
-      LOG_ACTION.DEPOSIT,
-      LOG_ACTION.WITHDRAW,
-      LOG_ACTION.TRANSFER,
-      LOG_ACTION.LOGGED,
-      LOG_ACTION.LOGOUT,
-    ),
-  })
-  action: string;
-
-  @Column({
-    type: DataType.STRING,
-  })
-  message: string;
+  transactionAccountId: string;
 
   @CreatedAt
   @Column({
     type: DataType.DATE,
     field: 'created_at',
   })
-  createdAt: Date;
-
-  @UpdatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at',
-  })
-  updatedAt: Date;
+  timestamp: Date;
 }
