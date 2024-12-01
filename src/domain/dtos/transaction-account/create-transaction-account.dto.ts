@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { TRANSACTION_TYPE } from 'src/domain/common/enums/transaction';
 
 import { Account, Transaction } from 'src/domain/entities';
 
@@ -15,9 +16,14 @@ export class CreateTransactionAccountDto {
   @IsString()
   transactionId: string;
 
-  originAccount: Account;
+  @IsOptional()
+  @IsString()
+  @IsEnum(TRANSACTION_TYPE)
+  type?: TRANSACTION_TYPE;
 
-  destinationAccount: Account;
+  // originAccount: Account;
 
-  transaction: Transaction;
+  // destinationAccount: Account;
+
+  // transaction: Transaction;
 }
