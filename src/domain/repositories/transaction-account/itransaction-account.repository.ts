@@ -10,6 +10,6 @@ export abstract class ITransactionAccountRepository {
     protected readonly transactionAccountRepository: typeof TransactionAccount,
   ) {}
   abstract createAccountsInvolved(
-    dto: Partial<TransactionAccount>,
+    dto: CreateTransactionAccountDto,
   ): Promise<TransactionAccount>;
 }

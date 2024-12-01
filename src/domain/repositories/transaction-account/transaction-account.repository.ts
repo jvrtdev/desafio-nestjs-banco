@@ -6,7 +6,7 @@ import { ITransactionAccountRepository } from './itransaction-account.repository
 @Injectable()
 export class TransactionAccountRepository extends ITransactionAccountRepository {
   createAccountsInvolved(
-    dto: Partial<TransactionAccount>,
+    dto: CreateTransactionAccountDto,
   ): Promise<TransactionAccount> {
     return this.transactionAccountRepository.create(dto);
   }

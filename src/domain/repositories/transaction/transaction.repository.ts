@@ -5,7 +5,7 @@ import { ITransactionRepository } from './itransaction.repository';
 
 @Injectable()
 export class TransactionRepository extends ITransactionRepository {
-  createOperation(dto: CreateTransactionDto): Promise<Transaction> {
+  createOperation(dto: Partial<Transaction>): Promise<Transaction> {
     return this.transactionRepository.create(dto);
   }
 }
