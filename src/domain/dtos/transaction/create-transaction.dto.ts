@@ -10,11 +10,11 @@ export class CreateTransactionDto {
   @IsString()
   type: TRANSACTION_TYPE;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  originAccountId?: string;
+  originAccountId: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  destinationAccountId?: string;
+  destinationAccountId: string;
 }
