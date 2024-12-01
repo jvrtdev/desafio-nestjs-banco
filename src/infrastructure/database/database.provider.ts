@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import { environment } from 'src/config';
 import { Account } from 'src/domain/entities/account/account.entity';
 import { Customer } from 'src/domain/entities/customer/customer.entity';
 import { TransactionAccount } from 'src/domain/entities/transaction-account/transaction-account.entity';
@@ -10,11 +11,11 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: 'desafio-nestjs',
+        host: environment.DATABASE_HOST,
+        port: +environment.DATABASE_PORT,
+        username: environment.DATABASE_USERNAME,
+        password: environment.DATABASE_PASSWORD,
+        database: environment.DATABASE_NAME,
         pool: {
           max: 5,
           min: 0,
