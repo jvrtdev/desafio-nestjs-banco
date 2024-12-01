@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   BelongsToMany,
   Column,
   CreatedAt,
@@ -37,17 +38,10 @@ export class Transaction extends Model<Transaction> {
   })
   amount: number;
 
-  //@HasMany(() => TransactionAccount)
-  //transactionAccounts: TransactionAccount[];
-
-  @BelongsToMany(() => Account, () => TransactionAccount, 'originAccountId')
+  @BelongsToMany(() => Account, () => TransactionAccount)
   originAccounts: Account[];
 
-  @BelongsToMany(
-    () => Account,
-    () => TransactionAccount,
-    'destinationAccountId',
-  )
+  @BelongsToMany(() => Account, () => TransactionAccount)
   destinationAccounts: Account[];
 
   @CreatedAt

@@ -45,10 +45,10 @@ export class TransactionAccount extends Model<TransactionAccount> {
   })
   transactionId: string;
 
-  @BelongsTo(() => Account, 'origin_account_id')
+  @BelongsTo(() => Account)
   originAccount: Account;
 
-  @BelongsTo(() => Account, 'destination_account_id')
+  @BelongsTo(() => Account)
   destinationAccount: Account;
 
   @BelongsTo(() => Transaction)
