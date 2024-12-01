@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TransactionService } from 'src/domain/services/transaction/transaction.service';
 import { AccountModule } from '../account/account.module';
+import { LogModule } from '../log/log.module';
 import { TransactionAccountModule } from '../transaction-account/transaction-account.module';
 import { TransactionController } from './controllers/transaction.controller';
 import { TransactionProviders } from './providers/transaction.providers';
@@ -9,7 +10,7 @@ import { TransactionMakeTransferUseCase } from './use-cases/make-transfer/transa
 import { TransactionMakeWithdrawlUseCase } from './use-cases/make-withdrawl/transaction-make-withdrawl.use-case';
 
 @Module({
-  imports: [AccountModule, TransactionAccountModule],
+  imports: [AccountModule, TransactionAccountModule, LogModule],
   controllers: [TransactionController],
   providers: [
     TransactionMakeDepositUseCase,

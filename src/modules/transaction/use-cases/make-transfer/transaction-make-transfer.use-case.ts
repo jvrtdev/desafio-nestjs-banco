@@ -6,6 +6,7 @@ import { Transaction } from 'src/domain/entities';
 import { ITransactionRepository } from 'src/domain/repositories/transaction';
 import { TransactionService } from 'src/domain/services/transaction/transaction.service';
 import { AccountUpdateAccountBalanceUseCase } from 'src/modules/account/use-cases/update-account-balance/account-update-account-balance.use-case';
+import { LogCreateUseCase } from 'src/modules/log/use-cases/create/log-create.use-case';
 import { TransactionAccountCreateAccountsRegisterUseCase } from 'src/modules/transaction-account/use-cases/create-transaction-accounts-register/create-accounts-register.use-case';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class TransactionMakeTransferUseCase
     private readonly transactionService: TransactionService,
     private readonly accountUpdateAccountBalanceUpdateUseCase: AccountUpdateAccountBalanceUseCase,
     private readonly transactionAccountCreateAccountsRegisterUseCase: TransactionAccountCreateAccountsRegisterUseCase,
+    private readonly createLogUseCase: LogCreateUseCase,
   ) {}
   async execute(dto: CreateTransferDto): Promise<Transaction> {
     const accounts =
@@ -48,13 +50,20 @@ export class TransactionMakeTransferUseCase
 
     const transaction = await this.transactionRepository.createOperation(dto);
 
-    console.log(transaction);
+    const transactionAccount =
+      await this.transactionAccountCreateAccountsRegisterUseCase.execute({
+        originAccountId: accounts.originAccount.id,
+        destinationAccountId: accounts.destinationAccount.id,
+        transactionId: transaction.id,
+        type: dto.type,
+      });
 
-    await this.transactionAccountCreateAccountsRegisterUseCase.execute({
-      originAccountId: accounts.originAccount.id,
-      destinationAccountId: accounts.destinationAccount.id,
-      transactionId: transaction.id,
-      type: dto.type,
+    await this.createLogUseCase.execute({
+      amount: dto.amount,
+      operation: dto.type,
+      previousBalance: accounts.originAccount.balance,
+      newBalance: accounts.originAccount.balance - dto.amount,
+      transactionAccountId: transactionAccount.id,
     });
 
     return transaction;

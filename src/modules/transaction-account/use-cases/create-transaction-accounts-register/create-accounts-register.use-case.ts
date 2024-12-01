@@ -25,6 +25,7 @@ export class TransactionAccountCreateAccountsRegisterUseCase
           : dto.destinationAccountId,
       transactionId: dto.transactionId,
     };
+
     switch (dto.type) {
       case TRANSACTION_TYPE.DEPOSIT:
         return await this.transactionAccountRepository.createAccountsInvolved(
