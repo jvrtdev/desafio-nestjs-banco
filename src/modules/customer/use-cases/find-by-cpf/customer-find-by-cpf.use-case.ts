@@ -4,10 +4,12 @@ import { Customer } from 'src/domain/entities';
 import { ICustomerRepository } from 'src/domain/repositories/customer';
 
 @Injectable()
-export class CustomerFindOneUseCase implements IBaseUseCase<string, Customer> {
+export class CustomerFindByCpfUseCase
+  implements IBaseUseCase<string, Customer>
+{
   constructor(private readonly customerRepository: ICustomerRepository) {}
-  async execute(accountId: string): Promise<Customer> {
-    const customer = await this.customerRepository.findCustomerById(accountId);
+  async execute(cpf: string): Promise<Customer> {
+    const customer = await this.customerRepository.findByCpf(cpf);
 
     if (!customer) {
       throw new HttpException('Customer not found', HttpStatus.BAD_REQUEST);

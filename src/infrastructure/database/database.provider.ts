@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import { Log } from 'src/domain/entities';
 import { Account } from 'src/domain/entities/account/account.entity';
 import { Customer } from 'src/domain/entities/customer/customer.entity';
 import { TransactionAccount } from 'src/domain/entities/transaction-account/transaction-account.entity';
@@ -22,8 +23,14 @@ export const databaseProviders = [
           idle: 10000,
         },
       });
-      sequelize.addModels([Customer, Account, Transaction, TransactionAccount]);
-      await sequelize.sync({ force: true });
+      sequelize.addModels([
+        Customer,
+        Account,
+        Transaction,
+        TransactionAccount,
+        Log,
+      ]);
+      await sequelize.sync();
       return sequelize;
     },
   },

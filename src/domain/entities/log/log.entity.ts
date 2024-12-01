@@ -63,6 +63,7 @@
 // }
 
 import {
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
@@ -75,6 +76,7 @@ import { LOG_ACTION, MODEL_NAME } from 'src/domain/common/enums/log';
 import { TRANSACTION_TYPE } from 'src/domain/common/enums/transaction';
 import { Account } from '../account';
 import { Transaction } from '../transaction';
+import { TransactionAccount } from '../transaction-account';
 
 @Table({ tableName: 'audit_logs', timestamps: true, underscored: true })
 export class Log extends Model<Log> {
@@ -115,12 +117,15 @@ export class Log extends Model<Log> {
   })
   newBalance: number;
 
-  @ForeignKey(() => Account)
+  @ForeignKey(() => TransactionAccount)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
   transactionAccountId: string;
+
+  @BelongsTo(() => TransactionAccount)
+  transactionAccounts: TransactionAccount[];
 
   @CreatedAt
   @Column({

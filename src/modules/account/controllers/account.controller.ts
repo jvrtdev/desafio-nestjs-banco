@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateAccountDto } from 'src/domain/dtos';
 import { Account } from 'src/domain/entities';
 import { AccountCreateUseCase } from '../use-cases/create/account-create.use-case';
@@ -28,6 +28,7 @@ export class AccountController
   ) {}
 
   @Post()
+  @ApiBearerAuth('jwt')
   @ApiResponse({ status: 201, description: 'Account created successfully!' })
   @ApiResponse({ status: 400, description: 'Error while creating account!' })
   @ApiResponse({ status: 500, description: 'Server side error!' })
@@ -36,6 +37,7 @@ export class AccountController
   }
 
   @Get(':id')
+  @ApiBearerAuth('jwt')
   @ApiResponse({ status: 200, description: 'Account found successfully!' })
   @ApiResponse({ status: 400, description: 'Account not found!' })
   @ApiResponse({ status: 500, description: 'Server side error!' })
@@ -48,6 +50,7 @@ export class AccountController
   }
 
   @Patch(':id')
+  @ApiBearerAuth('jwt')
   @ApiResponse({ status: 200, description: 'Account updated successfully!' })
   @ApiResponse({ status: 400, description: 'Account not found!' })
   @ApiResponse({ status: 500, description: 'Server side error!' })

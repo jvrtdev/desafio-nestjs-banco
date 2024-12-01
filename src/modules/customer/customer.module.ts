@@ -4,18 +4,25 @@ import { CustomerService } from 'src/domain/services/customer/validate-customer.
 import { CustomerController } from './controllers/customer.controller';
 import { CustomerProviders } from './providers/customer.providers';
 import { CustomerCreateUseCase } from './use-cases/create/customer-create.use-case';
+import { CustomerFindByCpfUseCase } from './use-cases/find-by-cpf/customer-find-by-cpf.use-case';
 import { CustomerFindOneUseCase } from './use-cases/find-one/customer-find-one.use-case';
 
 @Module({
-  imports: [],
+  imports: [CPFService],
   controllers: [CustomerController],
   providers: [
     CustomerCreateUseCase,
     CustomerFindOneUseCase,
     CustomerService,
+    CustomerFindByCpfUseCase,
     CPFService,
     ...CustomerProviders,
   ],
-  exports: [CustomerCreateUseCase, CustomerFindOneUseCase, CustomerService],
+  exports: [
+    CustomerCreateUseCase,
+    CustomerFindOneUseCase,
+    CustomerFindByCpfUseCase,
+    CustomerService,
+  ],
 })
 export class CustomerModule {}

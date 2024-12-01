@@ -5,6 +5,7 @@ import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { CustomerModule } from './modules/customer/customer.module';
+import { LogModule } from './modules/log/log.module';
 import { TransactionAccountModule } from './modules/transaction-account/transaction-account.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
 
@@ -16,6 +17,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
     AccountModule,
     TransactionModule,
     TransactionAccountModule,
+    LogModule,
   ],
   providers: [
     {

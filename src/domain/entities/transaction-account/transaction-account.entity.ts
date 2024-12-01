@@ -5,10 +5,12 @@ import {
   CreatedAt,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Account } from '../account/account.entity';
+import { Log } from '../log';
 import { Transaction } from '../transaction/transaction.entity';
 @Table({ tableName: 'transations_account' })
 export class TransactionAccount extends Model<TransactionAccount> {
@@ -53,6 +55,9 @@ export class TransactionAccount extends Model<TransactionAccount> {
 
   @BelongsTo(() => Transaction)
   transaction: Transaction;
+
+  @HasMany(() => Log)
+  logs: Log[];
 
   @CreatedAt
   @Column({

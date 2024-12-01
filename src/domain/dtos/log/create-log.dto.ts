@@ -1,20 +1,25 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { LOG_ACTION, MODEL_NAME } from 'src/domain/common/enums/log';
+import { IsDecimal, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { TRANSACTION_TYPE } from 'src/domain/common/enums/transaction';
 
 export class CreateLogDto {
   @IsString()
   @IsNotEmpty()
-  modelName: MODEL_NAME.ACCOUNT;
+  @IsEnum(TRANSACTION_TYPE)
+  operation: string;
+
+  @IsDecimal()
+  @IsNotEmpty()
+  amount: number;
+
+  @IsNotEmpty()
+  @IsDecimal()
+  previousBalance: number;
+
+  @IsNotEmpty()
+  @IsDecimal()
+  newBalance: number;
 
   @IsString()
   @IsNotEmpty()
-  action: LOG_ACTION;
-
-  @IsOptional()
-  @IsString()
-  transactionId: string;
-
-  @IsOptional()
-  @IsNumber()
-  accountId: number;
+  transactionAccountId: string;
 }

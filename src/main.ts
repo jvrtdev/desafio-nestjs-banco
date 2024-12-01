@@ -11,6 +11,14 @@ async function bootstrap() {
       'Simulação de funcionamento de um sistema bancário com implementação de conceitos de Domain-Driven Design (DDD). Usei padrões de arquitetura e boas práticas de desenvolvimento que aprendi ao longo da minha carreira como desenvolvedor Nest.js',
     )
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'jwt',
+    )
     .addTag('desafio-nestjs')
     .build();
 
