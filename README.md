@@ -1,85 +1,162 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Sistema Bancário com Domain-Driven Design (DDD)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este projeto implementa um sistema bancário backend utilizando **NestJS** e **Domain-Driven Design (DDD)**. A aplicação gerencia **clientes**, **contas bancárias** e **movimentações financeiras**, seguindo uma arquitetura organizada em camadas de domínio, aplicação e infraestrutura.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## **Requisitos Implementados**
 
-## Description
+### **Clientes**
+- Atributos:
+  - Nome completo.
+  - CPF (único).
+  - Data de nascimento.
+  - Senha
+- Regras de negócio:
+  - O CPF é validado.
+  - Um cliente pode possuir várias contas bancárias.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### **Contas Bancárias**
+- Atributos:
+  - Número da conta (gerado automaticamente).
+  - Saldo inicial (opcional, padrão: zero).
+  - Status (ativa/inativa).
+- Regras de negócio:
+  - Apenas contas ativas podem realizar movimentações.
+  - Uma conta pertence a um único cliente.
 
-## Project setup
+### **Movimentações Financeiras**
+- Tipos:
+  - Depósito.
+  - Saque.
+  - Transferência entre contas.
+- Regras de negócio:
+  - O saldo não pode ser negativo.
+  - Transferências só podem ocorrer entre contas ativas.
+  - Cada movimentação registra:
+    - Data/hora.
+    - Tipo de movimentação.
+    - Valor.
+    - Contas envolvidas (origem e destino).
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## **Endpoints**
 
-```bash
-# development
-$ npm run start
+### **1. Clientes**
+- `POST /clientes`: Criação de um novo cliente.
+- `GET /clientes/:id`: Obter informações de um cliente, incluindo suas contas.
 
-# watch mode
-$ npm run start:dev
+### **2. Contas Bancárias**
+- `POST /contas`: Criar uma nova conta para um cliente.
+- `PATCH /contas/:id`: Atualizar o status de uma conta (ativa/inativa).
+- `GET /contas/:id`: Obter informações de uma conta, incluindo movimentações.
 
-# production mode
-$ npm run start:prod
-```
+### **3. Movimentações**
+- `POST /movimentacoes/deposito`: Realizar um depósito.
+- `POST /movimentacoes/saque`: Realizar um saque.
+- `POST /movimentacoes/transferencia`: Realizar uma transferência entre contas.
+  
+### **4. Logs**
+- `POST /log`: Criar um Log da uma movimentação financeira.
+- `GET /log`: Buscar todos os logs.
 
-## Run tests
+### **5. Autenticação**
+- `POST /auth`: Fazer login para dar acesso as rotas através de um Bearer Token.
+  
+---
 
-```bash
-# unit tests
-$ npm run test
+## **Banco de Dados**
 
-# e2e tests
-$ npm run test:e2e
+- **Tipo**: Relacional (PostgreSQL).
+- **ORM**: Sequelize.
+- Modelagem:
+  - Tabelas para `Clientes`, `Contas Bancárias`, `Movimentações`, `Contas Envolvidas Em Uma Movimentação`, `Logs`.
+  - Relacionamentos definidos:
+    - Um cliente pode possuir várias contas.
+    - Movimentações referenciam as contas envolvidas.
+    - Cada movimentação é registrada na tabela de Logs.
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Resources
+## **Validações**
 
-Check out a few resources that may come in handy when working with NestJS:
+- Utilização de `class-validator` para validação de entradas:
+  - Exemplo: Verificação de CPF válido.
+- Tratamento de regras de negócio:
+  - Implementado nos Serviços de Domínio, não nos controladores.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## **Como Executar**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### **Requisitos**
+- Node.js v16+
+- Docker
 
-## Stay in touch
+### **Passos**
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/sistema-bancario-ddd.git
+   cd sistema-bancario-ddd
+   ```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-## License
+3. Suba o container Docker com o Banco de Dados:
+   - Abra o terminal e digite docker compose up -d.
+   - (É necessário ter o Docker instalado na sua maquina)
+   - Exemplo:
+     ```bash
+     docker compose up -d
+     ```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+4. Inicie o servidor:
+   ```bash
+   npm run start:dev
+   ```
+
+6. Acesse a API em:
+   ```
+   http://localhost:3000
+   ```
+- **Documentação com Swagger**:
+  - Disponível em: `http://localhost:3000/api`.
+
+
+## **Estrutura de pastas**
+
+![image](https://github.com/user-attachments/assets/2093b895-2523-4138-9169-155c3696569d)
+
+- Domain: Parte que contém a regra de negócios da aplicação, entidades, DTO'S e Etc...
+- Common: Nas minhas arquiteturas uso essa pasta para armazenar trechos de códigos que podem ser reutilizados por toda a aplicação como Enums, Utils, Abstract Patterns e Etc...
+- Repositories: Pasta que gerencia o acesso a informações do banco de dados, separei do resto dos módulos para furutamente implementar testes unitários.
+- Modules: Aqui contém os módulos da aplicação como ``Customer``, ``Account``, ``Transactions``. Dentro de cada módulo deixo os controllers, use-cases, providers, tudo que é referente ao módulo.
+
+**Como eu penso em DDD ao Arquitetar um Sistema**
+- DDD é uma filosofia de código que pode ser aplicada em qualquer tipo de arquitetura. Existem tipos de arquitetura que favorecem a implementação do DDD, mas nada adianta se quebrar os princípios do DDD.
+- Segui os princípios de DDD usando uma linguagem ubíqua para descrever os conceitos e contextos de cada domínio.
+- Segui o princípio de Bounded Context, na minha aplicação cada domínio tem suas tarefas, nenhum domínio faz o papel de outro. Ou seja, todos os contextos e funções foram delimitados.
+
+  ![image](https://github.com/user-attachments/assets/54646cf7-70f3-44b1-9fe9-b6b880cc1780)
+
+
+
+
+
+## **Tecnologias Utilizadas**
+
+- **NestJS**: Framework backend.
+- **TypeScript**: Linguagem principal.
+- **PostgreSQL**: Banco de dados relacional.
+- **Sequelize**: ORM para modelagem de dados.
+- **Swagger**: Documentação de API.
+- **class-validator**: Validação de dados.
+  
+
+---
+
+## **Autores**
+
+Desenvolvido por [João Vitor Romano](https://github.com/jvrtdev).
