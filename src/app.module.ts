@@ -1,3 +1,4 @@
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { DatabaseModule } from './infrastructure/database/database.module';
@@ -12,6 +13,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
 @Module({
   imports: [
     DatabaseModule,
+    RedisModule,
     AuthModule,
     CustomerModule,
     AccountModule,
