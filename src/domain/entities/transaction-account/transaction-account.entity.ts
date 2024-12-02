@@ -5,10 +5,12 @@ import {
   CreatedAt,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Account } from '../account/account.entity';
+import { Log } from '../log';
 import { Transaction } from '../transaction/transaction.entity';
 @Table({ tableName: 'transations_account' })
 export class TransactionAccount extends Model<TransactionAccount> {
@@ -24,6 +26,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
     type: DataType.UUID,
     allowNull: true,
     field: 'origin_account_id',
+    unique: false,
   })
   originAccountId: string;
 
@@ -32,6 +35,7 @@ export class TransactionAccount extends Model<TransactionAccount> {
     type: DataType.UUID,
     allowNull: true,
     field: 'destination_account_id',
+    unique: false,
   })
   destinationAccountId: string;
 
@@ -39,17 +43,21 @@ export class TransactionAccount extends Model<TransactionAccount> {
   @Column({
     type: DataType.UUID,
     allowNull: false,
+    unique: true,
   })
   transactionId: string;
 
-  @BelongsTo(() => Account, 'origin_account_id')
+  @BelongsTo(() => Account)
   originAccount: Account;
 
-  @BelongsTo(() => Account, 'destination_account_id')
+  @BelongsTo(() => Account)
   destinationAccount: Account;
 
   @BelongsTo(() => Transaction)
   transaction: Transaction;
+
+  @HasMany(() => Log)
+  logs: Log[];
 
   @CreatedAt
   @Column({

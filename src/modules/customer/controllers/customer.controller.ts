@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { IsPublic } from 'src/domain/common/decorators/is-public.decorator';
 import { CreateCustomerDto } from 'src/domain/dtos/customer/create-customer.dto';
 import { Customer } from 'src/domain/entities';
 import { CustomerCreateUseCase } from '../use-cases/create/customer-create.use-case';
@@ -14,6 +15,7 @@ export class CustomerController
     private readonly customerCreateUseCase: CustomerCreateUseCase,
     private readonly customerFindOneUseCase: CustomerFindOneUseCase,
   ) {}
+  @IsPublic()
   @Post()
   @ApiResponse({ status: 201, description: 'Cutomer successfully created!' })
   @ApiResponse({ status: 400, description: 'Validation error!' })
@@ -22,6 +24,7 @@ export class CustomerController
     return this.customerCreateUseCase.execute(dto);
   }
   @Get(':id')
+  @ApiBearerAuth('jwt')
   @ApiResponse({ status: 200, description: 'Cutomer successfully found!' })
   @ApiResponse({ status: 400, description: 'Customer not found!' })
   @ApiResponse({ status: 500, description: 'Server side error!' })

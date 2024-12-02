@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AccountService } from 'src/domain/services/account/account.service';
 import { CustomerModule } from '../customer/customer.module';
 import { AccountController } from './controllers/account.controller';
 import { AccountProviders } from './providers/account.providers';
@@ -17,6 +18,7 @@ import { AccountUpdateAccountStatusUseCase } from './use-cases/update-account-st
     AccountFindByAccountNumberUseCase,
     AccountUpdateAccountStatusUseCase,
     AccountUpdateAccountBalanceUseCase,
+    AccountService,
     ...AccountProviders,
   ],
   exports: [
@@ -25,6 +27,7 @@ import { AccountUpdateAccountStatusUseCase } from './use-cases/update-account-st
     AccountFindByAccountNumberUseCase,
     AccountUpdateAccountStatusUseCase,
     AccountUpdateAccountBalanceUseCase,
+    AccountService,
   ],
 })
 export class AccountModule {}

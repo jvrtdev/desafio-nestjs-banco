@@ -1,7 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { IBaseUseCase } from 'src/domain/common/base/use-case';
-import { CUSTOMER_REPOSITORY } from 'src/domain/common/constants';
-import { CreateCustomerDto } from 'src/domain/dtos';
 import { Customer } from 'src/domain/entities';
 import { ICustomerRepository } from 'src/domain/repositories/customer';
 

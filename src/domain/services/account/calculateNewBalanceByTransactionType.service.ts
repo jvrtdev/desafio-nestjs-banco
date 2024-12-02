@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { TRANSACTION_TYPE } from '../../enums/transaction';
+import { TRANSACTION_TYPE } from 'src/domain/common/enums/transaction';
 
 export function calculateNewBalanceByTransactionType(
   balance: number,

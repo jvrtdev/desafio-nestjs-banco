@@ -16,7 +16,7 @@ const BLACKLIST: Array<string> = [
 const STRICT_STRIP_REGEX: RegExp = /[.-]/g;
 const LOOSE_STRIP_REGEX: RegExp = /[^\d]/g;
 
-export class CPFUtil {
+export class CPFService {
   verifierDigit(digits: string): number {
     const numbers: Array<number> = digits.split('').map((number) => {
       return parseInt(number, 10);

@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { createApiPropertyDecorator } from '@nestjs/swagger/dist/decorators/api-property.decorator';
 import {
   CreateTransactionDto,
@@ -23,6 +23,7 @@ export class TransactionController
     private readonly transactionMakeWithdrawlUseCase: TransactionMakeWithdrawlUseCase,
   ) {}
   @Post('deposito')
+  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 201,
     description: 'The deposit has been successfully created.',
@@ -31,6 +32,7 @@ export class TransactionController
     return this.transactionMakeDepositUseCase.execute(dto);
   }
   @Post('transferencia')
+  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 201,
     description: 'The transfer has been successfully created.',
@@ -40,6 +42,7 @@ export class TransactionController
   }
 
   @Post('saque')
+  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 201,
     description: 'The withdrawal has been successfully created.',
