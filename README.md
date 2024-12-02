@@ -4,6 +4,9 @@ Este projeto implementa um sistema bancário backend utilizando **NestJS** e **D
 
 ## **Requisitos Implementados**
 
+- Implementei JWT para autenticação no sistema
+- Implementei um sistema de cache na rota ``GET /auth`` para aumentar a performance
+
 ### **Clientes**
 - Atributos:
   - Nome completo.
@@ -36,6 +39,7 @@ Este projeto implementa um sistema bancário backend utilizando **NestJS** e **D
     - Tipo de movimentação.
     - Valor.
     - Contas envolvidas (origem e destino).
+    
 
 ---
 
@@ -56,7 +60,6 @@ Este projeto implementa um sistema bancário backend utilizando **NestJS** e **D
 - `POST /movimentacoes/transferencia`: Realizar uma transferência entre contas.
   
 ### **4. Logs**
-- `POST /log`: Criar um Log da uma movimentação financeira.
 - `GET /log`: Buscar todos os logs.
 
 ### **5. Autenticação**
