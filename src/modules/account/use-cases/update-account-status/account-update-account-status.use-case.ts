@@ -22,7 +22,7 @@ export class AccountUpdateAccountStatusUseCase
         accountId,
         ACCOUNT_STATUS.INACTIVE,
       );
-      return new HttpException(
+      throw new HttpException(
         'Account status updated to status: inactive',
         HttpStatus.OK,
       );
@@ -31,7 +31,7 @@ export class AccountUpdateAccountStatusUseCase
       accountId,
       ACCOUNT_STATUS.ACTIVE,
     );
-    return new HttpException(
+    throw new HttpException(
       'Account status updated to status: active',
       HttpStatus.OK,
     );
